@@ -30,9 +30,11 @@ func main() {
 	e.Pre(echo_swagger.Swagger(
 		echo_swagger.WithSwaggerFilename("swagger/swagger.json"),
 	))
+	
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
+
 	e.GET("/demo", handler.Hello)
 
 	e.HTTPErrorHandler = func(err error, context echo.Context) {

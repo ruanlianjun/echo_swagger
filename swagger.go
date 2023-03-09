@@ -21,6 +21,7 @@ type swagger struct {
 	parser       *swag.Parser
 	filename     string
 	mainFileName string
+	refresh      bool
 }
 
 func newSwagger() *swagger {
@@ -30,6 +31,7 @@ func newSwagger() *swagger {
 		parser:       swag.New(),
 		filename:     defaultFilename,
 		mainFileName: defaultMainFileName,
+		refresh:      true,
 	}
 }
 
@@ -59,6 +61,12 @@ func WithMainFilename(mainFilename string) SwagOptions {
 	}
 }
 
+func Refresh(refresh bool) SwagOptions {
+	return func(s *swagger) {
+		s.refresh = refresh
+	}
+}
+
 var _swag *swagger = newSwagger()
 
 func Swagger(options ...SwagOptions) func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -68,8 +76,7 @@ func Swagger(options ...SwagOptions) func(next echo.HandlerFunc) echo.HandlerFun
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(context echo.Context) error {
 			gutils.Recover()
-			show, exists := os.LookupEnv("API_SWAG")
-			if !exists || show != "" {
+			if _swag.refresh {
 				generate(_swag)
 			}
 
