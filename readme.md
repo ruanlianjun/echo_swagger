@@ -8,19 +8,19 @@
 		echo_swagger.WithSwaggerFilename("swagger/swagger.json"), //生产存储swagger.json的路径
         echo_swagger.WithMainFilename("swagger.go"), //解析的go入口函数，默认main.go
         echo_swagger.Refresh(true), //是否每次都重新生成swagger.json
-	))
+  ))
 	
   e.GET("/", func(c echo.Context) error {
       return c.String(http.StatusOK, "Hello, World!")
-    })
-    e.GET("/demo", handler.Hello)
+   })
+  e.GET("/demo", handler.Hello)
 
-    e.HTTPErrorHandler = func(err error, context echo.Context) {
+  e.HTTPErrorHandler = func(err error, context echo.Context) {
       fmt.Fprintf(os.Stdout, "URl:%s Method:%s Message:%s\n", context.Request().URL, context.Request().Method, err.Error())
-    }
+  }
 		
-		// 启动swagger
-    e.Logger.Fatal(echo_swagger.Start(e, ":1323", true))
+  // 启动swagger
+  e.Logger.Fatal(echo_swagger.Start(e, ":1323", true))
 ```
 
 ### 浏览器打开
