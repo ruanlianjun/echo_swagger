@@ -5,7 +5,9 @@
 ```go
   e := echo.New()
 	e.Pre(echo_swagger.Swagger( //设置解析注释
-		echo_swagger.WithSwaggerFilename("swagger/swagger.json"),
+		echo_swagger.WithSwaggerFilename("swagger/swagger.json"), //生产存储swagger.json的路径
+        echo_swagger.WithMainFilename("swagger.go"), //解析的go入口函数，默认main.go
+        echo_swagger.Refresh(true), //是否每次都重新生成swagger.json
 	))
 	
   e.GET("/", func(c echo.Context) error {
