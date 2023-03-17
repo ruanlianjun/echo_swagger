@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -30,7 +31,7 @@ func main() {
 	e.Pre(echo_swagger.Swagger(
 		echo_swagger.WithSwaggerFilename("swagger/swagger.json"),
 	))
-	
+
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
@@ -38,8 +39,15 @@ func main() {
 	e.GET("/demo", handler.Hello)
 
 	e.HTTPErrorHandler = func(err error, context echo.Context) {
-		fmt.Fprintf(os.Stdout, "URl:%s Method:%s Message:%s\n", context.Request().URL, context.Request().Method, err.Error())
+		_, _ = fmt.Fprintf(os.Stdout, "URl:%s Method:%s Message:%s\n", context.Request().URL, context.Request().Method, err.Error())
 	}
 
-	e.Logger.Fatal(echo_swagger.Start(e, ":1323", true))
+	svc, err := echo_swagger.Start(e, ":1323", true)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := svc.ListenAndServe(); err != nil {
+		log.Fatal(err)
+	}
+	e.Logger.Fatal()
 }
